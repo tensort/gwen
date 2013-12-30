@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Web;
 
 namespace ThreadedIRCBot
 {
@@ -29,6 +32,12 @@ namespace ThreadedIRCBot
 
             if (command.Length == 2)
             {
+                WebClient client = new WebClient();
+                Stream stream = client.OpenRead("http://tinkering.graymalk.in/messageBoard/board.txt");
+                StreamReader reader = new StreamReader(stream);
+                Message = reader.ReadToEnd();
+
+
                 irc.send(new Message("PRIVMSG", e.message.messageTarget, "Message Board Set to: \"" + Message + "\""));
                 return;
             }
@@ -37,6 +46,10 @@ namespace ThreadedIRCBot
                 s += command[i] + " ";
 
             Message = s.Trim();
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://tinkering.graymalk.in/messageBoard/?apiKey=K1pnBbbBuXjACwt5BOQ2bxOcoyfiNEvh9DWcChQnMD5gjz9Lb4NYZ9yUbkpvVqv&message=" + Message);
+            request.GetResponse();
+
             irc.send(new Message("PRIVMSG", e.message.messageTarget, "Message Board Set to: \"" + Message + "\""));
         }
 
