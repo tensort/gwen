@@ -15,7 +15,10 @@ namespace ThreadedIRCBot
         string Message = "";
         public override void Start()
         {
-            
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead("http://tinkering.graymalk.in/messageBoard/board.txt");
+            StreamReader reader = new StreamReader(stream);
+            Message = reader.ReadToEnd();
         }
 
         public override void Stop()
