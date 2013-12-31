@@ -14,7 +14,7 @@ namespace ThreadedIRCBot
 
         public Bot(string[] args)
         {
-            irc = new IRC("irc.cs.kent.ac.uk", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
+            irc = new IRC("localhost", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);
 

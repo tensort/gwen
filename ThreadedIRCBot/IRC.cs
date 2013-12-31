@@ -140,7 +140,7 @@ namespace ThreadedIRCBot
                 Output.Write("CONNECTION", ConsoleColor.Red, "Failed to connect to remote server");
 
             tcpClient.LingerState = new LingerOption(false, 0);
-
+            login();
             connecting = false;
         }
 

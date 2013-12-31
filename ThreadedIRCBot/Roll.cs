@@ -35,7 +35,7 @@ namespace ThreadedIRCBot
                 irc.send(new Message("PRIVMSG", e.message.messageTarget, "Roll of " + r.Next(100)));
                 return;
             }
-
+            
             string output = "";
             int total = 0;
             foreach(string si in command)
