@@ -7,7 +7,7 @@ using System.Text;
 using System.Web;
 
 namespace ThreadedIRCBot
-{
+{   
     class MessageBoard : Module
     {
         public MessageBoard(IRC ircNet) : base(ircNet) { }
