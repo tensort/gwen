@@ -11,19 +11,17 @@ namespace ThreadedIRCBot
         private IRC irc;
         List<string> adminList;
         Hashtable modules = new Hashtable();
+        private const string mainAdmin = "graymalkin";
 
         public Bot(string[] args)
         {
             irc = new IRC("localhost", "KentIRC", "Gwen", "Simon Moore's C# IRC Bot, v2", 6667);
-            irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);
-            irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);
-
+            irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
+            irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 
             adminList = new List<string>();
-            adminList.Add("graymalkin");
+            adminList.Add(mainAdmin);
         }
-
-        public IRC GetIRC() { return irc; }
 
         public void AddModule(Module m, string command)
         {
@@ -79,7 +77,7 @@ namespace ThreadedIRCBot
             if (e.message.messageText.StartsWith(" :$add_admin"))
             {
                 Output.Write("ADMIN", ConsoleColor.Red, e.message.messageFrom + " attempted " + e.message.messageText.Substring(2));
-                if (e.message.messageFrom != "graymalkin")
+                if (e.message.messageFrom != mainAdmin)
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
@@ -106,18 +104,6 @@ namespace ThreadedIRCBot
                 }
             }
 
-            if (e.message.messageText.StartsWith(" :$msgBoard"))
-            {
-                string ms = "";
-                for (int i = 2; i < cmd.Length; i++)
-                {
-                    ms += " " + cmd[i];
-                }
-
-
-                Output.Write("MsgBoard", ConsoleColor.Green, ms);
-            }
-
             if (e.message.messageText.StartsWith(" :$compliment_zebr"))
                 irc.send(new Message("PRIVMSG", e.message.messageTarget, getCompliment()));
 
@@ -135,6 +121,7 @@ namespace ThreadedIRCBot
 
 
         }
+        public IRC GetIRC() { return irc; }
 
         public string getCompliment()
         {
@@ -148,11 +135,20 @@ namespace ThreadedIRCBot
             return compliments[number];
         }
 
+        /// <summary>
+        /// Work around for IRC servers awaiting an IDENT response
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void irc_IdentNoAuthEvent(object sender, Events.IdentAuthNoResponseEventArgs e)
         {
             irc.login();
         }
 
+        /// <summary>
+        /// Sends the modules enabled on the bot
+        /// </summary>
+        /// <param name="e"></param>
         private void PrintModules(Events.MessageReceivedEventArgs e)
         {
             string output = "";
@@ -164,6 +160,10 @@ namespace ThreadedIRCBot
             irc.send(new Message("PRIVMSG", e.message.messageTarget, output));
         }
 
+        /// <summary>
+        /// Sends the help message for a given module.
+        /// </summary>
+        /// <param name="e"></param>
         private void GetHelp(Events.MessageReceivedEventArgs e)
         { 
             string m = ":" + e.message.messageText.Split(' ')[2];

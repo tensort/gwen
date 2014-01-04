@@ -19,6 +19,7 @@ namespace ThreadedIRCBot
             Stream stream = client.OpenRead("http://tinkering.graymalk.in/messageBoard/board.txt");
             StreamReader reader = new StreamReader(stream);
             Message = reader.ReadToEnd();
+            Output.Write("Message Board", ConsoleColor.Green, Message);
         }
 
         public override void Stop()
