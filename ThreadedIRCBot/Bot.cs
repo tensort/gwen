@@ -11,19 +11,17 @@ namespace ThreadedIRCBot
         private IRC irc;
         List<string> adminList;
         Hashtable modules = new Hashtable();
+        private const string mainAdmin = "graymalkin";
 
         public Bot(string[] args)
         {
-            irc = new IRC("localhost", "KentIRC", "Gwen", "Simon Moore's C# IRC Bot, v2", 6667);
-            irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);
-            irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);
-
+            irc = new IRC("localhost", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
+            irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
+            irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 
             adminList = new List<string>();
-            adminList.Add("graymalkin");
+            adminList.Add(mainAdmin);
         }
-
-        public IRC GetIRC() { return irc; }
 
         public void AddModule(Module m, string command)
         {
@@ -32,35 +30,35 @@ namespace ThreadedIRCBot
 
         void irc_MessageEvent(object sender, Events.MessageReceivedEventArgs e)
         {
-            string[] cmd = e.message.messageText.Split(' ');
+            string[] cmd = e.Message.MessageText.Split(' ');
             if (cmd.Length > 1 && modules.ContainsKey(cmd[1]))
             {
                 Module m = (Module)modules[cmd[1]];
                 m.InterpretCommand(cmd, e);
             }
 
-            if (e.message.messageText.StartsWith(" :$join"))
+            if (e.Message.MessageText.StartsWith(" :$join"))
             {
-                if (!adminList.Contains(e.message.messageFrom))
+                if (!adminList.Contains(e.Message.MessageFrom))
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
-                    irc.join(cmd[i]);
+                    irc.Join(cmd[i]);
             }
 
-            if (e.message.messageText.StartsWith(" :$leave"))
+            if (e.Message.MessageText.StartsWith(" :$leave"))
             {
-                if (!adminList.Contains(e.message.messageFrom))
+                if (!adminList.Contains(e.Message.MessageFrom))
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
-                    irc.part(cmd[i]);
+                    irc.Part(cmd[i]);
             }
 
-            if (e.message.messageText.StartsWith(" :$quit"))
+            if (e.Message.MessageText.StartsWith(" :$quit"))
             {
-                Output.Write("ADMIN", ConsoleColor.Red, e.message.messageFrom + " attempted " + e.message.messageText.Substring(2));
-                if (!adminList.Contains(e.message.messageFrom))
+                Output.Write("ADMIN", ConsoleColor.Red, e.Message.MessageFrom + " attempted " + e.Message.MessageText.Substring(2));
+                if (!adminList.Contains(e.Message.MessageFrom))
                     return;
 
                 string reason = "";
@@ -73,13 +71,13 @@ namespace ThreadedIRCBot
                 else
                     reason = "No reason given";
 
-                irc.quit(reason);
+                irc.Quit(reason);
             }
 
-            if (e.message.messageText.StartsWith(" :$add_admin"))
+            if (e.Message.MessageText.StartsWith(" :$add_admin"))
             {
-                Output.Write("ADMIN", ConsoleColor.Red, e.message.messageFrom + " attempted " + e.message.messageText.Substring(2));
-                if (e.message.messageFrom != "graymalkin")
+                Output.Write("ADMIN", ConsoleColor.Red, e.Message.MessageFrom + " attempted " + e.Message.MessageText.Substring(2));
+                if (e.Message.MessageFrom != mainAdmin)
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
@@ -90,10 +88,10 @@ namespace ThreadedIRCBot
                 }
             }
 
-            if (e.message.messageText.StartsWith(" :$remove_admin"))
+            if (e.Message.MessageText.StartsWith(" :$remove_admin"))
             {
-                Output.Write("ADMIN", ConsoleColor.Red, e.message.messageFrom + " attempted " + e.message.messageText.Substring(2));
-                if (!adminList.Contains(e.message.messageFrom))
+                Output.Write("ADMIN", ConsoleColor.Red, e.Message.MessageFrom + " attempted " + e.Message.MessageText.Substring(2));
+                if (!adminList.Contains(e.Message.MessageFrom))
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
@@ -106,35 +104,24 @@ namespace ThreadedIRCBot
                 }
             }
 
-            if (e.message.messageText.StartsWith(" :$msgBoard"))
-            {
-                string ms = "";
-                for (int i = 2; i < cmd.Length; i++)
-                {
-                    ms += " " + cmd[i];
-                }
+            if (e.Message.MessageText.StartsWith(" :$compliment_zebr"))
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, getCompliment()));
 
+            if (e.Message.MessageText.StartsWith(" :$help") && e.Message.MessageText.Split(' ').Length <= 2)
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, @"Help can be found at http://graymalk.in/ircbot/"));
 
-                Output.Write("MsgBoard", ConsoleColor.Green, ms);
-            }
-
-            if (e.message.messageText.StartsWith(" :$compliment_zebr"))
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, getCompliment()));
-
-            if (e.message.messageText.StartsWith(" :$help") && e.message.messageText.Split(' ').Length <= 2)
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, @"Help can be found at http://graymalk.in/ircbot/"));
-
-            if (e.message.messageText.StartsWith(" :$help") && e.message.messageText.Split(' ').Length > 2)
+            if (e.Message.MessageText.StartsWith(" :$help") && e.Message.MessageText.Split(' ').Length > 2)
                 GetHelp(e);
 
-            if (e.message.messageText.StartsWith(" :$modules"))
+            if (e.Message.MessageText.StartsWith(" :$modules"))
                 PrintModules(e);
 
-            if (e.message.messageFrom == "zebr" && (e.message.messageText.Contains("Gwen: ") || e.message.messageText.Contains("Gwen ")))
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, "zebr: <3"));
+            if (e.Message.MessageFrom == "zebr" && (e.Message.MessageText.Contains("Gwen: ") || e.Message.MessageText.Contains("Gwen ")))
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "zebr: <3"));
 
 
         }
+        public IRC GetIRC() { return irc; }
 
         public string getCompliment()
         {
@@ -148,11 +135,20 @@ namespace ThreadedIRCBot
             return compliments[number];
         }
 
+        /// <summary>
+        /// Work around for IRC servers awaiting an IDENT response
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void irc_IdentNoAuthEvent(object sender, Events.IdentAuthNoResponseEventArgs e)
         {
-            irc.login();
+            irc.Login();
         }
 
+        /// <summary>
+        /// Sends the modules enabled on the bot
+        /// </summary>
+        /// <param name="e"></param>
         private void PrintModules(Events.MessageReceivedEventArgs e)
         {
             string output = "";
@@ -161,15 +157,19 @@ namespace ThreadedIRCBot
                 output += s + " ";
             }
             output = output.Trim().Replace(":", "");
-            irc.send(new Message("PRIVMSG", e.message.messageTarget, output));
+            irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, output));
         }
 
+        /// <summary>
+        /// Sends the help message for a given module.
+        /// </summary>
+        /// <param name="e"></param>
         private void GetHelp(Events.MessageReceivedEventArgs e)
         { 
-            string m = ":" + e.message.messageText.Split(' ')[2];
+            string m = ":" + e.Message.MessageText.Split(' ')[2];
             if(modules.ContainsKey(m))
             {
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, ((Module)modules[m]).Help()));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, ((Module)modules[m]).Help()));
             }
         }
     }

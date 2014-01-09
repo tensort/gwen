@@ -39,7 +39,7 @@ namespace ThreadedIRCBot
         /// <summary>
         /// Opens the connection to the IRC Network
         /// </summary>
-        public void connect()
+        public void Connect()
         {
             Output.Write("CONNECTION", ConsoleColor.Red, "Attempting to connect...");
 
@@ -51,15 +51,21 @@ namespace ThreadedIRCBot
             while (connecting)
                 Thread.Sleep(200);
 
-            while (tcpClient.Connected)
+            while (tcpClient.Connected)         // While we still have a connection
             {
-                if (tcpClient.Available > 0)
+                if (tcpClient.Available > 0)    // Check to see if there's any data to read
                 {
+                    // Create a new callback for the read data
                     AsyncCallback readCallback = new AsyncCallback(ASyncReadCallback);
+
+                    // Create a buffer for the data
                     byte[] buffer = new byte[tcpClient.Available];
+
+                    // Read the data into the buffer, and pass it to the callback method to deal with asychronously 
                     networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, buffer);
                 }
-                Thread.Sleep(200);
+                // Read 0 bytes from the buffer, and allow this to block
+                networkStream.Read(new byte[1], 0, 0);
             }
 
             Output.Write("CONNECTION", ConsoleColor.Red, "Disconnected.");
@@ -69,37 +75,37 @@ namespace ThreadedIRCBot
         /// <summary>
         /// Logs into the IRC network
         /// </summary>
-        public void login()
+        public void Login()
         {
-            send("NICK " + nickname);
-            send("USER " + nickname + " " + netname + " " + netname + " :" + realname);
+            Send("NICK " + nickname);
+            Send("USER " + nickname + " " + netname + " " + netname + " :" + realname);
         }
 
         /// <summary>
         /// Joins a channel on the IRC Network
         /// </summary>
         /// <param name="channelName">A given channel name</param>
-        public void join(string channelName)
+        public void Join(string channelName)
         {
-            send("JOIN " + channelName);
+            Send("JOIN " + channelName);
         }
 
         /// <summary>
         /// Leaves a channel on the IRC Network
         /// </summary>
         /// <param name="channelName">A given channel name</param>
-        public void part(string channelName)
+        public void Part(string channelName)
         {
-            send("PART " + channelName);
+            Send("PART " + channelName);
         }
 
         /// <summary>
         /// Quits the IRC network, and close the TCP IP connections
         /// </summary>
         /// <param name="reason">The reason for quitting</param>
-        public void quit(string reason)
+        public void Quit(string reason)
         {
-            send("QUIT :" + reason);
+            Send("QUIT :" + reason);
             networkStream.Close();
             tcpClient.Close();
         }
@@ -108,21 +114,28 @@ namespace ThreadedIRCBot
         /// Send a Message over IRC
         /// </summary>
         /// <param name="m">Message to send</param>
-        public void send(Message m)
+        public void Send(IRCMessage m)
         {
-            send(Encoding.UTF8.GetString(m.toByteArray()));
+            Send(Encoding.UTF8.GetString(m.ToByteArray()));
         }
 
         /// <summary>
         /// Send a raw string encoded in UTF8
         /// </summary>
         /// <param name="msg">String to encode and send</param>
-        private void send(string msg)
+        private void Send(string msg)
         {
-            networkStream.Flush();
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
+            try
+            {
+                networkStream.Flush();
+                byte[] data = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
 
-            networkStream.BeginWrite(data, 0, data.Length, ASyncSendCallback, msg);
+                networkStream.BeginWrite(data, 0, data.Length, ASyncSendCallback, msg);
+            }
+            catch (NullReferenceException NRE)
+            {
+                Output.Write("ERROR", ConsoleColor.Red, "Network stream doesn't exist.");
+            }
         }
 
         #region ASyncCallbacks
@@ -140,7 +153,7 @@ namespace ThreadedIRCBot
                 Output.Write("CONNECTION", ConsoleColor.Red, "Failed to connect to remote server");
 
             tcpClient.LingerState = new LingerOption(false, 0);
-            login();
+            Login();
             connecting = false;
         }
 
@@ -155,12 +168,12 @@ namespace ThreadedIRCBot
             {
                 string sanitisedLn = ln.Replace("\r\n", "");
                 Output.Write("RECEIVED", ConsoleColor.Green, sanitisedLn);
-                createMessageEvent(sanitisedLn);
+                CreateMessageEvent(sanitisedLn);
             }
         }
         #endregion
 
-        private void createMessageEvent(string text)
+        private void CreateMessageEvent(string text)
         {            
             if (text.Contains("NOTICE AUTH :*** No Ident response"))
             {
@@ -170,7 +183,7 @@ namespace ThreadedIRCBot
             }
 
             if (text.StartsWith("PING"))
-                send(text.Replace("PING :", "PONG "));
+                Send(text.Replace("PING :", "PONG "));
             else
             {
                 string msg = "", target = "", command = "", from = "";
@@ -182,7 +195,7 @@ namespace ThreadedIRCBot
                 {
                     msg = msg + " " + text.Split(' ')[i];
                 }
-                MessageEvent(this, new Events.MessageReceivedEventArgs(new Message(command, target, msg, from)));
+                MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
             }
         }
     }
