@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml;
-using System.Net;
-using System.Xml.XPath;
 using System.Xml.Linq;
 using System.Web;
 
@@ -30,7 +26,7 @@ namespace ThreadedIRCBot
 
         public override void InterpretCommand(string[] cmd, Events.MessageReceivedEventArgs e)
         {
-            Message response;
+            IRCMessage response;
             string msg = "", query = "";
 
             if (cmd.Length > 2)
@@ -39,9 +35,9 @@ namespace ThreadedIRCBot
                     query += cmd[i].Replace("\r\n", " ") + " ";
             }
             msg = Weather.getWeather(query);
-            response = new Message("PRIVMSG", e.message.messageTarget, msg);
+            response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg);
 
-            irc.send(response);
+            irc.Send(response);
         }
 
 

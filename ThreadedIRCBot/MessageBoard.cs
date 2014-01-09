@@ -42,7 +42,7 @@ namespace ThreadedIRCBot
                 Message = reader.ReadToEnd();
 
 
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, "Message Board Set to: \"" + Message + "\""));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Message Board Set to: \"" + Message + "\""));
                 return;
             }
 
@@ -54,7 +54,7 @@ namespace ThreadedIRCBot
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://tinkering.graymalk.in/messageBoard/?apiKey=K1pnBbbBuXjACwt5BOQ2bxOcoyfiNEvh9DWcChQnMD5gjz9Lb4NYZ9yUbkpvVqv&message=" + Message);
             request.GetResponse();
 
-            irc.send(new Message("PRIVMSG", e.message.messageTarget, "Message Board Set to: \"" + Message + "\""));
+            irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Message Board Set to: \"" + Message + "\""));
         }
 
         public override string Help()

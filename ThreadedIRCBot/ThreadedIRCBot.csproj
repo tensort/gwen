@@ -39,6 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Octokit">
+      <HintPath>..\..\..\..\..\Downloads\octokit.net-master\octokit.net-master\Octokit\bin\Debug\Net45\Octokit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -51,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Bot.cs" />
     <Compile Include="Define.cs" />
+    <Compile Include="Ning.cs" />
     <Compile Include="MessageBoard.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="IRC.cs" />
@@ -60,13 +64,14 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roll.cs" />
-    <Compile Include="SkPublishAPI.cs" />
-    <Compile Include="SkPublishAPIException.cs" />
+    <Compile Include="Libraries\Cambridge Dictionary\SkPublishAPI.cs" />
+    <Compile Include="Libraries\Cambridge Dictionary\SkPublishAPIException.cs" />
     <Compile Include="Weather.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

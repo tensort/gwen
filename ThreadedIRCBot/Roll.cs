@@ -32,7 +32,7 @@ namespace ThreadedIRCBot
         {
             if(command.Length <= 2)
             {
-                irc.send(new Message("PRIVMSG", e.message.messageTarget, "Roll of " + r.Next(100)));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Roll of " + r.Next(100)));
                 return;
             }
             
@@ -58,7 +58,7 @@ namespace ThreadedIRCBot
                 }
             }
 
-            irc.send(new Message("PRIVMSG", e.message.messageTarget, "Roll of " + output.Trim() + ", total of " + total));
+            irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Roll of " + output.Trim() + ", total of " + total));
         }
 
         public override string Help()

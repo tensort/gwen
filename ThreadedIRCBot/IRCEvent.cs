@@ -7,11 +7,11 @@ namespace ThreadedIRCBot.Events
 {
     public class MessageReceivedEventArgs : EventArgs
     {
-        public Message message { get; private set; }
+        public IRCMessage Message { get; private set; }
 
-        public MessageReceivedEventArgs(Message m)
+        public MessageReceivedEventArgs(IRCMessage m)
         {
-            message = m;
+            Message = m;
         }
     }
 

@@ -5,48 +5,48 @@ using System.Text;
 
 namespace ThreadedIRCBot
 {
-    public class Message
+    public class IRCMessage
     {
-        public string messageTarget { get; private set; }
-        public string messageText { get; private set; }
-        public string messageFrom { get; private set; }
-        public string servercmd { get; private set; }
+        public string MessageTarget { get; private set; }
+        public string MessageText { get; private set; }
+        public string MessageFrom { get; private set; }
+        public string ServerCmd { get; private set; }
 
-        public Message(string command, string target, string text)
+        public IRCMessage(string command, string target, string text)
         {
-            servercmd = command;
-            messageTarget = target;
-            messageText = text;
-            messageFrom = "";
+            ServerCmd = command;
+            MessageTarget = target;
+            MessageText = text;
+            MessageFrom = "";
         }
 
-        public Message(string command, string target, string text, string from)
+        public IRCMessage(string command, string target, string text, string from)
         {
-            servercmd = command;
-            messageTarget = target;
-            messageText = text;
-            messageFrom = from;
+            ServerCmd = command;
+            MessageTarget = target;
+            MessageText = text;
+            MessageFrom = from;
         }
 
-        public Message(string command, string msg)
+        public IRCMessage(string command, string msg)
         {
-            messageText = msg;
-            servercmd = command;
-            messageFrom = "";
-            messageTarget = "";
+            MessageText = msg;
+            ServerCmd = command;
+            MessageFrom = "";
+            MessageTarget = "";
         }
 
-        public byte[] toByteArray()
+        public byte[] ToByteArray()
         {
             byte[] output;
 
-            if (messageTarget != "")
+            if (MessageTarget != "")
             {
-                output = System.Text.Encoding.UTF8.GetBytes(servercmd + " " + messageTarget + " :" + messageText);
+                output = System.Text.Encoding.UTF8.GetBytes(ServerCmd + " " + MessageTarget + " :" + MessageText);
             }
             else
             {
-                output = System.Text.Encoding.UTF8.GetBytes(servercmd + " :" + messageText);
+                output = System.Text.Encoding.UTF8.GetBytes(ServerCmd + " :" + MessageText);
             }
 
             return output;

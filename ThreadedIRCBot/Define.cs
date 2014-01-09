@@ -38,12 +38,12 @@ namespace ThreadedIRCBot
             {
                 try
                 {
-                    irc.send(new Message("PRIVMSG", e.message.messageTarget, DefineWord(command[2])));
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, DefineWord(command[2])));
                 }
                 catch (Exception exc)
                 {
                     Output.Write("Define", ConsoleColor.Red, exc.Message + " " + exc.StackTrace);
-                    irc.send(new Message("PRIVMSG", e.message.messageTarget, "Could not define: " + command[2]));
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Could not define: " + command[2]));
                 }
             }
         }
@@ -51,7 +51,7 @@ namespace ThreadedIRCBot
         public static string DefineWord(string word)
         {
             Output.Write("Define", ConsoleColor.Yellow, word);
-            SkPublishAPI api = new SkPublishAPI("http://dictionary.cambridge.org/api/v1/", "nFDGeMlZeWoM54FxNT4X7hOloAZ6DrddUf6XPzHvTzxu4XMdKwyJPOGWHR0EftmE");
+            SkPublishAPI api = new SkPublishAPI("http://dictionary.cambridge.org/api/v1/", "X2kG7tRdNrGGe4dZS2CcSTo9aVjGbr4kCYRgm5C8cOq8hrKeY5ATkhd2vz2WX8Wd");
 
             IList<IDictionary<string, object>> dictionaries = JsonToArray(api.GetDictionaries());
             IDictionary<string, object> dictionary = dictionaries[0];
