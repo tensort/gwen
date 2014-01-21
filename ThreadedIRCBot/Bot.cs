@@ -15,10 +15,10 @@ namespace ThreadedIRCBot
 
         public Bot(string[] args)
         {
-            irc = new IRC("localhost", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
+            irc = new IRC("irc.cs.kent.ac.uk", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
-
+            
             adminList = new List<string>();
             adminList.Add(mainAdmin);
         }
