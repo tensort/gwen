@@ -90,9 +90,9 @@ namespace ThreadedIRCBot
             Output.Write("Define", ConsoleColor.Yellow, dictionaryCode);
 
             IDictionary<string, object> bestMatch = JsonToObject(api.SearchFirst(dictionaryCode, word, "xml"));
-            word = (string) bestMatch["entryId"];
+            string bestWord = (string) bestMatch["entryId"];
 
-            IDictionary<string, object> definition = JsonToObject(api.GetEntry(dictionaryCode, word, "xml"));
+            IDictionary<string, object> definition = JsonToObject(api.GetEntry(dictionaryCode, bestWord, "xml"));
             return "Definition of " + word + ": " + XMLEntryToString((string)definition["entryContent"]);
         }
 
