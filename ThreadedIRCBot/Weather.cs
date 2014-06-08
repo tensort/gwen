@@ -48,18 +48,7 @@ namespace ThreadedIRCBot
             return getWeather("Canterbury");
         }
 
-<<<<<<< HEAD
-        public static string getWeather(string locaiton)
-        {
-            if (locaiton == "")
-                locaiton = "Canterbury";
 
-            string resultString = "Weather for ";
-            char degree = (char)176;    
-
-            Output.Write("PROCESSING", ConsoleColor.Yellow, resultString + " " + locaiton);
-            locaiton = locaiton.Trim();
-=======
         public static string getWeather(string location)
         {
             if (location == "")
@@ -70,16 +59,13 @@ namespace ThreadedIRCBot
 
             Output.Write("PROCESSING", ConsoleColor.Yellow, resultString + " " + location);
             location = location.Trim();
->>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
 
             try  
             {
                 XNamespace xNamespace = "http://xml.weather.yahoo.com/ns/rss/1.0"; //replace this with namespace of prefix 'yweather'
-<<<<<<< HEAD
-                XDocument xDocument = XDocument.Load(@"http://weather.yahooapis.com/forecastrss?u=c&w=" + getWOEID(HttpUtility.UrlEncode(locaiton)));
-=======
+
                 XDocument xDocument = XDocument.Load(@"http://weather.yahooapis.com/forecastrss?u=c&w=" + getWOEID(HttpUtility.UrlEncode(location)));
->>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
+
 
                 var result = from item in xDocument.Descendants(xNamespace + "location")
                              select item;
@@ -129,11 +115,8 @@ namespace ThreadedIRCBot
             if (resultString != "Weather for ")
                 return resultString;
             else
-<<<<<<< HEAD
-                return "Could not find " + locaiton;
-=======
+
                 return "Could not find " + location;
->>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
 
         }
 

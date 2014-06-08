@@ -15,17 +15,11 @@ namespace ThreadedIRCBot
 
         public Bot(string[] args)
         {
-<<<<<<< HEAD
             irc = new IRC("localhost", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 
-=======
-            irc = new IRC("irc.cs.kent.ac.uk", "KentIRC", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
-            irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
-            irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
-            
->>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
+
             adminList = new List<string>();
             adminList.Add(mainAdmin);
         }
@@ -38,11 +32,7 @@ namespace ThreadedIRCBot
         void irc_MessageEvent(object sender, Events.MessageReceivedEventArgs e)
         {
             string[] cmd = e.Message.MessageText.Split(' ');
-<<<<<<< HEAD
             if (cmd.Length > 1 && modules.ContainsKey(cmd[1].Trim()))
-=======
-            if (cmd.Length > 1 && modules.ContainsKey(cmd[1]))
->>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
             {
                 Module m = (Module)modules[cmd[1]];
                 m.InterpretCommand(cmd, e);
