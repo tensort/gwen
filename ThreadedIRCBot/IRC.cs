@@ -138,7 +138,7 @@ namespace ThreadedIRCBot
 
                 networkStream.BeginWrite(data, 0, data.Length, ASyncSendCallback, msg);
             }
-            catch (NullReferenceException NRE)
+            catch (NullReferenceException)
             {
                 Output.Write("ERROR", ConsoleColor.Red, "Network stream doesn't exist.");
             }

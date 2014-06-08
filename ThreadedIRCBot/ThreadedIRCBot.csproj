@@ -43,9 +43,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Octokit">
-      <HintPath>..\..\..\..\..\Downloads\octokit.net-master\octokit.net-master\Octokit\bin\Debug\Net45\Octokit.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
