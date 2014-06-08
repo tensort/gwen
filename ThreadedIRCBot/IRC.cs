@@ -181,31 +181,38 @@ namespace ThreadedIRCBot
 
         private void CreateMessageEvent(string text)
         {            
-
-            if (text.Contains("NOTICE AUTH :*** No Ident response"))
+            try
             {
-                // Create new ident request no response event
-                IdentNoAuthEvent(this, new Events.IdentAuthNoResponseEventArgs());
-                return;
-            }
-
-            if (text.StartsWith("PING"))
-                Send(text.Replace("PING :", "PONG "));
-            else
-            {
-                if (text.Split(' ').Length > 3)
-                {  
-                    string msg = "", target = "", command = "", from = "";
-                    command = text.Split(' ')[1];
-                    if (command == "PRIVMSG")
-                        from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
-                    target = text.Split(' ')[2];
-                    for (int i = 3; i < text.Split(' ').Length; i++)
-                    {
-                        msg = msg + " " + text.Split(' ')[i];
-                    }
-                    MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
+                if (text.Contains("NOTICE AUTH :*** No Ident response"))
+                {
+                    // Create new ident request no response event
+                    IdentNoAuthEvent(this, new Events.IdentAuthNoResponseEventArgs());
+                    return;
                 }
+
+                if (text.StartsWith("PING"))
+                    Send(text.Replace("PING :", "PONG "));
+                else
+                {
+                    if (text.Split(' ').Length > 3)
+                    {  
+                        string msg = "", target = "", command = "", from = "";
+                        command = text.Split(' ')[1];
+                        if (command == "PRIVMSG")
+                            from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
+                        target = text.Split(' ')[2];
+                        for (int i = 3; i < text.Split(' ').Length; i++)
+                        {
+                            msg = msg + " " + text.Split(' ')[i];
+                        }
+                        MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Output.Write("ERROR", ConsoleColor.Red, e.Message);
+                Output.Write("ERROR", ConsoleColor.Red, e.Source);
             }
         }
     }
