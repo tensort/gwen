@@ -192,16 +192,19 @@ namespace ThreadedIRCBot
                 Send(text.Replace("PING :", "PONG "));
             else
             {
-                string msg = "", target = "", command = "", from = "";
+                        string msg = "", target = "", command = "", from = "";
                 command = text.Split(' ')[1];
-                if (command == "PRIVMSG")
-                    from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
-                target = text.Split(' ')[2];
-                for (int i = 3; i < text.Split(' ').Length; i++)
-                {
-                    msg = msg + " " + text.Split(' ')[i];
+                if (command.Length > 2)
+                {    
+                    if (command == "PRIVMSG")
+                        from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
+                    target = text.Split(' ')[2];
+                    for (int i = 3; i < text.Split(' ').Length; i++)
+                    {
+                        msg = msg + " " + text.Split(' ')[i];
+                    }
+                    MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
                 }
-                MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
             }
         }
     }
