@@ -59,11 +59,16 @@ namespace ThreadedIRCBot
                     AsyncCallback readCallback = new AsyncCallback(ASyncReadCallback);
 
                     // Create a buffer for the data
+<<<<<<< HEAD
                     byte[] buffer = new byte[tcpClient.Available]; 
+=======
+                    byte[] buffer = new byte[tcpClient.Available];
+>>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
 
                     // Read the data into the buffer, and pass it to the callback method to deal with asychronously 
                     networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, buffer);
                 }
+<<<<<<< HEAD
                 #if __MonoCS__
                     // Sleeps the thread for 50ms (blocking read does not work under mono)
                     Thread.Sleep(50);
@@ -71,6 +76,10 @@ namespace ThreadedIRCBot
                     // Read 0 bytes from the buffer, and allow this to block
                     networkStream.Read(new byte[1], 0, 0);
                 #endif
+=======
+                // Read 0 bytes from the buffer, and allow this to block
+                networkStream.Read(new byte[1], 0, 0);
+>>>>>>> c2b1780db45bc776676895cc5fa13d53f935d5f1
             }
 
             Output.Write("CONNECTION", ConsoleColor.Red, "Disconnected.");
