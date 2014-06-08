@@ -181,6 +181,7 @@ namespace ThreadedIRCBot
 
         private void CreateMessageEvent(string text)
         {            
+
             if (text.Contains("NOTICE AUTH :*** No Ident response"))
             {
                 // Create new ident request no response event
@@ -192,10 +193,10 @@ namespace ThreadedIRCBot
                 Send(text.Replace("PING :", "PONG "));
             else
             {
-                        string msg = "", target = "", command = "", from = "";
-                command = text.Split(' ')[1];
-                if (command.Length > 2)
-                {    
+                if (text.Split(' ').Length > 3)
+                {  
+                    string msg = "", target = "", command = "", from = "";
+                    command = text.Split(' ')[1];
                     if (command == "PRIVMSG")
                         from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
                     target = text.Split(' ')[2];
