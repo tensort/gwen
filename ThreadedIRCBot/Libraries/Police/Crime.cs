@@ -34,8 +34,19 @@ namespace Police
         /// </summary>
         public string ID { get; set; }
 
+        /// <summary>
+        /// Location type of the crime
+        /// </summary>
         public LOCATION_TYPE LocationType { get; set; }
 
+        /// <summary>
+        /// Outcome of the crime
+        /// </summary>
+        public OUTCOME_TYPE OutcomeStatus { get; set; }
 
+        /// <summary>
+        /// Date of the outcome
+        /// </summary>
+        public string OutcomeDate { get; set; }
     }
 }
