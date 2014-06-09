@@ -79,7 +79,7 @@ namespace ThreadedIRCBot
 
         public static string DefineWord(string word)
         {
-            Output.Write("Define\t", ConsoleColor.Yellow, word);
+            Output.Write("Define", ConsoleColor.Yellow, word);
 
             SkPublishAPI api = new SkPublishAPI(apiURL, apiKey);
 
@@ -133,20 +133,6 @@ namespace ThreadedIRCBot
             Output.Write("Word of Day", ConsoleColor.Yellow, "");
             
             SkPublishAPI api = new SkPublishAPI(apiURL, apiKey);
-            /*
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-
-            IList<IDictionary<string, object>> dictionaries = JsonToArray(api.GetDictionaries());
-            IDictionary<string, object> dictionary = dictionaries[0];
-
-            string dictionaryCode = (string)dictionary["dictionaryCode"];
-
-            IList<IDictionary<string, object>> bestMatch = JsonToArray(api.GetWordOfTheDay("", today, "xml"));
-            word = (string)bestMatch[0]["entryId"];
-
-            IDictionary<string, object> definition = JsonToObject(api.GetEntry(dictionaryCode, word, "xml"));
-            return (string)bestMatch[0]["entryLabel"] + ": " + (string)definition["entryContent"];
-            /*/
 
             var data = new NameValueCollection();
             data["accessKey"] = apiKey;
@@ -166,7 +152,6 @@ namespace ThreadedIRCBot
             string def = XMLEntryToString((string)definition["entryContent"]);
 
             return "Word of the day: " + s + " - " + def;
-            // */
         }
 
         private static IDictionary<string, object> JsonToObject(string json)
