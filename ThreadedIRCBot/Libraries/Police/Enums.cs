@@ -5,11 +5,17 @@ using System.Text;
 
 namespace Police
 {
+    /// <summary>
+    /// Location types
+    /// </summary>
     public enum LOCATION_TYPE
     {
         Force, British_Transport_Police
     }
 
+    /// <summary>
+    /// Outcome types
+    /// </summary>
     public enum OUTCOME_TYPE
     {
         UNKNOWN,
@@ -39,20 +45,40 @@ namespace Police
         UNDER_INVESTIGATION
     }
 
+    /// <summary>
+    /// Outcome
+    /// </summary>
     public class Outcome
     {
+        /// <summary>
+        /// Outcome description
+        /// </summary>
         public string Description { get; private set; }
+
+        /// <summary>
+        /// Code for this outcome from the API
+        /// </summary>
         public string Code { get; private set; }
 
+        /// <summary>
+        /// Creates an outcome.
+        /// </summary>
+        /// <param name="description">Description of the outcome</param>
+        /// <param name="code">The JSON code for this outcome, from the API</param>
         public Outcome(string description, string code)
         {
             Description = description;
             Code = code;
         }
 
-        public static OUTCOME_TYPE ConvertToOutcomeType(string s)
+        /// <summary>
+        /// Convert the API's code for an outcome to OUTCOME_TYPE
+        /// </summary>
+        /// <param name="code">The code from the API data</param>
+        /// <returns>OUTCOME_TYPE matching the given code</returns>
+        public static OUTCOME_TYPE ConvertToOutcomeType(string code)
         {
-            switch (s)
+            switch (code)
             {
                 case "awaiting-court-result":
                     return OUTCOME_TYPE.AWAITING_COURT_RESULT;
@@ -107,9 +133,14 @@ namespace Police
             }
         }
 
-        public static Outcome ConvertToOutcome(OUTCOME_TYPE k)
+        /// <summary>
+        /// Convert the OUTCOME_TYPE enumb into an Outcome
+        /// </summary>
+        /// <param name="outcomeType">An OUTCOME_TYPE</param>
+        /// <returns>Outcome matching the given OUTCOME_TYPE</returns>
+        public static Outcome ConvertToOutcome(OUTCOME_TYPE outcomeType)
         {
-            switch (k)
+            switch (outcomeType)
             {
 				case OUTCOME_TYPE.AWAITING_COURT_RESULT:
                     return new Outcome("Awaiting court outcome", "awaiting-court-result");
@@ -184,7 +215,7 @@ namespace Police
                     return new Outcome("Under investigation", "under-investigation");
 				
                 default:
-                    return new Outcome("Outcome unknown", null);
+                    return new Outcome("Outcome unknown"    , null);
             }
         }
     }
