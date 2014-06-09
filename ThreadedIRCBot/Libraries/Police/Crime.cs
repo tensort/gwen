@@ -10,7 +10,7 @@ namespace Police
         /// <summary>
         /// Crime catagory
         /// </summary>
-        public string Catagory { get; set; }
+        public string Category { get; set; }
 
         /// <summary>
         /// 64-character unique identifier for that crime. 
