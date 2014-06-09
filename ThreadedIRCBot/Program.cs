@@ -11,6 +11,7 @@ namespace ThreadedIRCBot
         static void Main(string[] args)
         {
             Bot b = new Bot(args);
+            b.AddModule(new WorldTime(b.GetIRC()), "$time");
             b.AddModule(new Weather(b.GetIRC()), "$weather");
             b.AddModule(new MessageBoard(b.GetIRC()), "$mboard");
             b.AddModule(new Roll(b.GetIRC()), "$roll");
