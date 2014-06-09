@@ -76,7 +76,9 @@ namespace ThreadedIRCBot
             {
                 string place = "";
                 for (int i = 2; i < command.Length; i++)
-                    place += command[i];
+                    place += command[i] + " ";
+
+                place = place.Trim();
 
                 // Time in given place.
                 Output.Write("World Time", ConsoleColor.Yellow, "Attempting to get world time for " + command[2]);
@@ -109,7 +111,8 @@ namespace ThreadedIRCBot
             {
                 if(command.Length == 2)
                 {
-                    // We're looking at ":$time" on it's own - give local time.
+                    DateTime t = DateTime.Now;
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Current local time: " + t.ToString("HH:mm")));
                 }
             }
         }
