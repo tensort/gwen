@@ -56,12 +56,12 @@
     <Compile Include="Bot.cs" />
     <Compile Include="Crime.cs" />
     <Compile Include="Define.cs" />
-    <Compile Include="Libraries\Police\CrimeCatagory.cs" />
+    <Compile Include="Libraries\Police\CrimeCategory.cs" />
     <Compile Include="Libraries\Police\Enums.cs" />
     <Compile Include="Libraries\Police\Crime.cs" />
     <Compile Include="Libraries\Police\Location.cs" />
     <Compile Include="Libraries\Police\NeighbourhoodEvent.cs" />
-    <Compile Include="Libraries\Police\Neighbourhoods.cs" />
+    <Compile Include="Libraries\Police\Neighbourhood.cs" />
     <Compile Include="Libraries\Police\Person.cs" />
     <Compile Include="Libraries\Police\Force.cs" />
     <Compile Include="Libraries\Police\RequestHelper.cs" />
