@@ -13,10 +13,27 @@ namespace Police
         #region Engagement Methods
         public class Engagement_Method
         {
+            /// <summary>
+            /// URL for the Engagement
+            /// </summary>
             public string URL { get; private set; }
+
+            /// <summary>
+            /// Description
+            /// </summary>
             public string Description { get; private set; }
+
+            /// <summary>
+            /// Title
+            /// </summary>
             public string Title { get; private set; }
 
+            /// <summary>
+            /// Creates a new Engagement Method
+            /// </summary>
+            /// <param name="url">URL</param>
+            /// <param name="description">Description</param>
+            /// <param name="title">Title</param>
             public Engagement_Method(string url, string description, string title)
             {
                 URL = url;
