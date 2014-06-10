@@ -70,6 +70,11 @@ namespace Police
         /// A list of the community engagement methods from this force
         /// </summary>
         public IList<Engagement_Method> EngagementMethods { get; set; }
+
+        /// <summary>
+        /// The Force's web URL
+        /// </summary>
+        public string URL { get; set; }
         #endregion
 
         /// <summary>
@@ -81,6 +86,7 @@ namespace Police
         {
             ID = id;
             Name = name;
+            EngagementMethods = new List<Engagement_Method>();
         }
     }
 }
