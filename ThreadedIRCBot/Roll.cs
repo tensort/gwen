@@ -49,7 +49,7 @@ namespace ThreadedIRCBot
                         int max = int.Parse(s.Split('d')[1]);
                         for (int i = 0; i < number && i < 5; i++)
                         {
-                            int b = r.Next(max);
+                            int b = r.Next(max) + 1;
                             output += b + " ";
                             total += b;
                         }
