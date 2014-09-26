@@ -7,10 +7,21 @@ namespace ThreadedIRCBot
 {
     class EventTimer : Module
     {
-        private DateTime eventTime;
-        private string eventName;
+        public class Time
+        {
+            public Time(int hr, int min)
+            {
+                hour = hr;
+                minute = min;
+            }
 
-        public EventTimer(IRC ircNet, DateTime time, string name) : base(ircNet)
+            public int hour { get; set; }
+            public int minute { get; set; }
+        }
+        private string eventName;
+        private Time eventTime;
+
+        public EventTimer(IRC ircNet, Time time, string name) : base(ircNet)
         {
             eventTime = time;
             eventName = name;
@@ -25,25 +36,28 @@ namespace ThreadedIRCBot
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
             string timeUntil = "";
-            if(eventTime.Day == 0)
+
+            DateTime time = DateTime.Now;
+            if (time.Hour > eventTime.hour || (time.Hour >= eventTime.hour && time.Minute > eventTime.minute))
             {
-                TimeSpan duration = DateTime.Now.TimeOfDay - eventTime.TimeOfDay;
-                timeUntil += duration.Hours + " hours, " + duration.Minutes + "minutes";
+                time = new DateTime(time.Year, time.Month, time.Day + 1, eventTime.hour, eventTime.minute, 0, 0, DateTimeKind.Unspecified);
             }
             else
             {
-                TimeSpan duration = DateTime.Now - eventTime;
-                timeUntil += duration.Hours + " hours, " + duration.Minutes + "minutes";
+                time = new DateTime(time.Year, time.Month, time.Day, eventTime.hour, eventTime.minute, 0, 0, DateTimeKind.Unspecified);
             }
+            TimeSpan ts = time - DateTime.Now;
 
-            string msg = "Time until " + eventName + ": " + timeUntil;
+            timeUntil += ts.Hours + "hours, " + ts.Minutes + " minutes.";
+
+            string msg = "Time until " + eventName.Split('$')[1] + ": " + timeUntil;
             IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg); 
             irc.Send(response);
         }
 
         public override string Help()
         {
-            return "Prints the time until " + eventTime.TimeOfDay.ToString("hh:mm") + ".";
+            return "Prints the time until " + eventTime.hour + ":" + eventTime.minute + ".";
         }
     }
 
@@ -98,7 +112,7 @@ namespace ThreadedIRCBot
 
 
 
-            EventTimer t = new EventTimer(irc, eventTime, command[1]);
+            EventTimer t = new EventTimer(irc, new EventTimer.Time(eventTime.Hour, eventTime.Minute), command[1]);
             bot.AddModule(t, command[2]);
         }
 

@@ -26,7 +26,10 @@ namespace ThreadedIRCBot
 
         public void AddModule(Module m, string command)
         {
-            modules.Add(":" + command, m);
+            if (modules[":" + command] != null)
+                modules[":" + command] = m;
+            else
+                modules.Add(":" + command, m);
         }
 
         public bool IsModuleNameReserved(string command)
