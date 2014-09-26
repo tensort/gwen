@@ -54,9 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot.cs" />
-    <Compile Include="Define.cs" />
-    <Compile Include="Ning.cs" />
-    <Compile Include="MessageBoard.cs" />
+    <Compile Include="Modules\Define.cs" />
+    <Compile Include="Modules\Ning.cs" />
+    <Compile Include="Modules\MessageBoard.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="IRC.cs" />
     <Compile Include="IRCEvent.cs" />
@@ -64,11 +64,11 @@
     <Compile Include="Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Roll.cs" />
+    <Compile Include="Modules\Roll.cs" />
     <Compile Include="Libraries\Cambridge Dictionary\SkPublishAPI.cs" />
     <Compile Include="Libraries\Cambridge Dictionary\SkPublishAPIException.cs" />
-    <Compile Include="Weather.cs" />
-    <Compile Include="WorldTime.cs" />
+    <Compile Include="Modules\Weather.cs" />
+    <Compile Include="Modules\WorldTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
