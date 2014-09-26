@@ -64,26 +64,26 @@ namespace ThreadedIRCBot
             DateTime eventTime;
             try
             {
-                DateTime.TryParse(command[3], out eventTime);
+                DateTime.TryParse(command[2], out eventTime);
             }
             catch
             {
-                string msg = "Could not parse input \"" + command[3].Trim() + "\".";
+                string msg = "Could not parse input \"" + command[2].Trim() + "\".";
                 IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg);
                 irc.Send(response);
                 return;
             }
 
-            if(bot.IsModuleNameReserved(command[2]))
+            if(bot.IsModuleNameReserved(command[1]))
             {
-                string msg = "\"" + command[3].Trim() + "\" is reserved.";
+                string msg = "\"" + command[1].Trim() + "\" is reserved.";
                 IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg);
                 irc.Send(response);
                 return;
             }
 
-            EventTimer t = new EventTimer(irc, eventTime, command[2]);
-            bot.AddModule(t, command[2]);
+            EventTimer t = new EventTimer(irc, eventTime, command[1]);
+            bot.AddModule(t, command[1]);
         }
 
         public override string Help()
