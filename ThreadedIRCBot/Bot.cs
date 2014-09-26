@@ -29,6 +29,11 @@ namespace ThreadedIRCBot
             modules.Add(":" + command, m);
         }
 
+        public bool IsModuleNameReserved(string command)
+        {
+            return (modules[":" + command] == null) || !(modules[":" + command] is EventTimer);
+        }
+
         void irc_MessageEvent(object sender, Events.MessageReceivedEventArgs e)
         {
             string[] cmd = e.Message.MessageText.Split(' ');
