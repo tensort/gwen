@@ -16,10 +16,12 @@ namespace ThreadedIRCBot
             b.AddModule(new MessageBoard(b.GetIRC()), "$mboard");
             b.AddModule(new Roll(b.GetIRC()), "$roll");
             b.AddModule(new Ning(b.GetIRC()), "$ning");
+            b.AddModule(new Timer(b.GetIRC(), b), "$timer");
             Define d = new Define(b.GetIRC());
             b.AddModule(d, "$d");
             b.AddModule(d, "$p");
             b.AddModule(d, "$wotd");
+            
 
             b.GetIRC().Connect();
         }
