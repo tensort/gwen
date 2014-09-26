@@ -31,7 +31,7 @@ namespace ThreadedIRCBot
 
         public bool IsModuleNameReserved(string command)
         {
-            return (modules[":" + command] == null) || !(modules[":" + command] is EventTimer);
+            return (modules[":" + command] != null) || !(modules[":" + command] is EventTimer);
         }
 
         void irc_MessageEvent(object sender, Events.MessageReceivedEventArgs e)
