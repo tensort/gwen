@@ -24,7 +24,19 @@ namespace ThreadedIRCBot
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
-            string msg = "test";
+            string timeUntil = "";
+            if(eventTime.Day == 0)
+            {
+                TimeSpan duration = DateTime.Now.TimeOfDay - eventTime.TimeOfDay;
+                timeUntil += duration.Hours + " hours, " + duration.Minutes + "minutes";
+            }
+            else
+            {
+                TimeSpan duration = DateTime.Now - eventTime;
+                timeUntil += duration.Hours + " hours, " + duration.Minutes + "minutes";
+            }
+
+            string msg = "Time until " + eventName + timeUntil;
             IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg); 
             irc.Send(response);
         }
@@ -61,29 +73,33 @@ namespace ThreadedIRCBot
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
+            if (!command[2].StartsWith("$"))
+                command[2] = "$" + command[2];
             DateTime eventTime;
             try
             {
-                DateTime.TryParse(command[2], out eventTime);
+                DateTime.TryParse(command[3], out eventTime);
             }
             catch
             {
-                string msg = "Could not parse input \"" + command[2].Trim() + "\".";
+                string msg = "Could not parse input \"" + command[3].Trim() + "\".";
                 IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg);
                 irc.Send(response);
                 return;
             }
 
-            if(bot.IsModuleNameReserved(command[1]))
+            if(bot.IsModuleNameReserved(command[2]))
             {
-                string msg = "\"" + command[1].Trim() + "\" is reserved.";
+                string msg = "\"" + command[2].Trim() + "\" is reserved.";
                 IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg);
                 irc.Send(response);
                 return;
             }
+
+
 
             EventTimer t = new EventTimer(irc, eventTime, command[1]);
-            bot.AddModule(t, command[1]);
+            bot.AddModule(t, command[2]);
         }
 
         public override string Help()
