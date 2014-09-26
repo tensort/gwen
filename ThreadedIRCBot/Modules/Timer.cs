@@ -36,7 +36,7 @@ namespace ThreadedIRCBot
                 timeUntil += duration.Hours + " hours, " + duration.Minutes + "minutes";
             }
 
-            string msg = "Time until " + eventName + timeUntil;
+            string msg = "Time until " + eventName + ": " + timeUntil;
             IRCMessage response = new IRCMessage("PRIVMSG", e.Message.MessageTarget, msg); 
             irc.Send(response);
         }
