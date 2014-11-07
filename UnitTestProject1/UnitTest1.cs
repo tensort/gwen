@@ -12,6 +12,9 @@ namespace UnitTestProject1
         public void GetTitle()
         {
             Assert.AreEqual(ThreadedIRCBot.URL.getTitle(@"http://www.google.com/"), "Google");
+
+            Assert.AreEqual(URL.getTitle(@"http://www.bbc.co.uk/news/uk-politics-29956289"), "BBC News - Osborne's EU budget claim challenged");
+            Assert.AreEqual(URL.getTitle(@"https://www.youtube.com/watch?v=zqKZ_WIK5ms"), "Yaël Naïm - Toxic - YouTube");
         }
 
         [TestMethod]

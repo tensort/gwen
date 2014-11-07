@@ -55,11 +55,11 @@ namespace ThreadedIRCBot
         {
             HtmlDocument doc = new HtmlDocument();
             WebClient wc = new WebClient();
-            doc.Load(wc.OpenRead(url));
+            doc.Load(wc.OpenRead(url), Encoding.UTF8);
 
             string retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText;
 
-            return retVal;
+            return HtmlEntity.DeEntitize(retVal);
         }
     }
 }
