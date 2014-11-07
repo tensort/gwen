@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace ThreadedIRCBot
 {
-    class IRC
+    public class IRC
     {
         public delegate void MessageEventHandler(object sender, Events.MessageReceivedEventArgs e);
         public event MessageEventHandler MessageEvent;

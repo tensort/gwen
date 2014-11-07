@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ThreadedIRCBot
 {
-    abstract class Module
+    public abstract class Module
     {
         protected IRC irc;
 

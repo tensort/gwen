@@ -21,7 +21,8 @@ namespace ThreadedIRCBot
             b.AddModule(d, "$d");
             b.AddModule(d, "$p");
             b.AddModule(d, "$wotd");
-            
+
+            b.AddListener(new URL(b.GetIRC()));
 
             b.GetIRC().Connect();
         }
