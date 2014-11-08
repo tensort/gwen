@@ -12,7 +12,7 @@ namespace ThreadedIRCBot
     public class URL : Module
     {
         public static string URL_REGEX = @"(?<Protocol>\w+):\/\/(?<Domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*";
-
+        public static Int64 MAX_DOWNLOAD_SIZE = 1024 * 1024 * 64; // Max download 64 mb
         public override void Start() { }
 
         public override void Stop() { }
@@ -53,13 +53,45 @@ namespace ThreadedIRCBot
 
         public static string getTitle(string url)
         {
+            Int64 bytes_total;
+
+            WebRequest wr = HttpWebRequest.Create(url);
+            wr.Method = "HEAD";
+            using (WebResponse wresp = wr.GetResponse())
+            {
+                bytes_total = Convert.ToInt64(wresp.Headers["Content-Length"]);
+                string size_string = size_to_string(bytes_total);
+                if (bytes_total > MAX_DOWNLOAD_SIZE)
+                {
+                    return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+                }
+            }
+
             HtmlDocument doc = new HtmlDocument();
             WebClient wc = new WebClient();
             doc.Load(wc.OpenRead(url), Encoding.UTF8);
-
-            string retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText;
-
+            string retVal = "";
+            if (doc.DocumentNode.SelectSingleNode("//head/title") != null)
+            {
+                retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText;
+            }
+            else
+            {
+                return "[" + wc.ResponseHeaders["content-type"] + " " + size_to_string(bytes_total) + "]";
+            }
             return HtmlEntity.DeEntitize(retVal);
+        }
+
+        public static string size_to_string(Int64 byteCount)
+        {
+            string[] suf = { " B", " KB", " MB", " GB", " TB", " PB", " EB" }; //Longs run out around EB
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+
         }
     }
 }
