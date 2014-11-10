@@ -9,10 +9,10 @@ namespace UnitTestProject1
     public class URLTests
     {
         [TestMethod]
+        [TestCategory("Helper")]
         public void BytesToSize()
         {
             Assert.AreEqual(URL.size_to_string((long)(1024 * 1024 * 1024 * 1.2)), "1.2 GB");
-
         }
 
         [TestMethod]
@@ -25,6 +25,12 @@ namespace UnitTestProject1
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"), "[application/x-iso9660-image 3.9 GB]");
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-KdeLive.iso"), "[application/x-iso9660-image 1.2 GB]");
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-Minimal.iso"), "[application/x-iso9660-image 566 MB]");
+        }
+
+        [TestMethod]
+        public void GetTitleUASpoof()
+        {
+            Assert.AreEqual(URL.getTitle(@"https://www.facebook.com/gray.malkin1"), "Simon Moore | Facebook");
         }
 
         [TestMethod]

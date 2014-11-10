@@ -69,6 +69,8 @@ namespace ThreadedIRCBot
 
             HtmlDocument doc = new HtmlDocument();
             WebClient wc = new WebClient();
+            // Lie about the user agent, to stop websites trying to be clever.
+            wc.Headers["User-Agent"] = "Mozilla/5.0 (MSIE 9.0; Windows NT 6.1; Trident/5.0)";
             doc.Load(wc.OpenRead(url), Encoding.UTF8);
             string retVal = "";
             if (doc.DocumentNode.SelectSingleNode("//head/title") != null)
