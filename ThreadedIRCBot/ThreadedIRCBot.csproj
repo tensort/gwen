@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Bot.cs" />
     <Compile Include="Modules\Define.cs" />
+    <Compile Include="Modules\FOOAS.cs" />
     <Compile Include="Modules\Ning.cs" />
     <Compile Include="Modules\MessageBoard.cs" />
     <Compile Include="Module.cs" />
