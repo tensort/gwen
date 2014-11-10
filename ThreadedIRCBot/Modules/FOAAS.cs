@@ -98,7 +98,7 @@ namespace ThreadedIRCBot
 
         public override string Help()
         {
-            throw new NotImplementedException();
+            return "Calls methods from http://foaas.herokuapp.com/ where the command is $foaas <command> [options split by space]";
         }
 
         public static string GetResponse(string url)
