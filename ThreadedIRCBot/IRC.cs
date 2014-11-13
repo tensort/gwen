@@ -134,7 +134,7 @@ namespace ThreadedIRCBot
             try
             {
                 networkStream.Flush();
-                byte[] data = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
+                byte[] data = System.Text.Encoding.UTF8.GetBytes(msg.Replace("\n", "") + "\r\n");
 
                 networkStream.BeginWrite(data, 0, data.Length, ASyncSendCallback, msg);
             }
