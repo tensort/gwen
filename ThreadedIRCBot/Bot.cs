@@ -14,9 +14,9 @@ namespace ThreadedIRCBot
         List<Module> listeners = new List<Module>();
         private const string mainAdmin = "graymalkin";
 
-        public Bot(string[] args)
+        public Bot(string ircNet, string ircName, string ircNick, string realName, int port)
         {
-            irc = new IRC("irc.freenode.org", "freenode", "GwenDev", "Simon Moore's C# IRC Bot, v2", 6667);
+            irc = new IRC(ircNet, ircName, ircNick, realName, port);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 

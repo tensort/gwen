@@ -75,9 +75,11 @@
     <Compile Include="Modules\Weather.cs" />
     <Compile Include="Modules\WorldTime.cs" />
     <Compile Include="Modules\Timer.cs" />
+    <Compile Include="Setting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="settings.json" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

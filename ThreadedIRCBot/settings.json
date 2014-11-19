@@ -1,0 +1,10 @@
+﻿[
+	{
+		"IRCNane" : "Gwyn",
+		"IRCHost" : "irc.freenode.org",
+		"IRCNick" : "Gwyn",
+		"IRCUser" : "Gwyn the C#.NET IRC Bot",
+		"IRCPort" : 6667,
+		"AutoJoin" : ["#cs"]
+	}
+]
