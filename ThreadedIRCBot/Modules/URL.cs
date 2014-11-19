@@ -75,7 +75,7 @@ namespace ThreadedIRCBot
             string retVal = "";
             if (doc.DocumentNode.SelectSingleNode("//head/title") != null)
             {
-                retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText;
+                retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText.Trim();
             }
             else
             {
@@ -93,7 +93,6 @@ namespace ThreadedIRCBot
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
-
         }
     }
 }
