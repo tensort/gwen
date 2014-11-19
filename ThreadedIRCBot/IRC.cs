@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThreadedIRCBot
 {
@@ -40,52 +42,25 @@ namespace ThreadedIRCBot
         /// <summary>
         /// Opens the connection to the IRC Network
         /// </summary>
-        public void Connect()
+        public async void Connect(List<String> autoJoin)
         {
             Output.Write("CONNECTION", ConsoleColor.Red, "Attempting to connect...");
 
             tcpClient = new TcpClient();
             AsyncCallback connectCallback = new AsyncCallback(ASyncConnectCallback);
-            connecting = true;
-            tcpClient.BeginConnect(chatnet, port, ASyncConnectCallback, connecting);
-
-            while (connecting)
-                Thread.Sleep(200);
-
-            while (tcpClient.Connected)         // While we still have a connection
-            {
-                if (tcpClient.Available > 0)    // Check to see if there's any data to read
-                {
-                    // Create a new callback for the read data
-                    AsyncCallback readCallback = new AsyncCallback(ASyncReadCallback);
-
-                    // Create a buffer for the data
-
-                    byte[] buffer = new byte[tcpClient.Available];
-
-                    // Read the data into the buffer, and pass it to the callback method to deal with asychronously 
-                    networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, buffer);
-                }
-                #if __MonoCS__
-                    // Sleeps the thread for 50ms (blocking read does not work under mono)
-                    Thread.Sleep(50);
-                #else   
-                    // Read 0 bytes from the buffer, and allow this to block
-                    networkStream.Read(new byte[1], 0, 0);
-                #endif
-            }
-
-            Output.Write("CONNECTION", ConsoleColor.Red, "Disconnected.");
-            Console.ReadLine();
+            tcpClient.BeginConnect(chatnet, port, ASyncConnectCallback, autoJoin);
         }
 
         /// <summary>
         /// Logs into the IRC network
         /// </summary>
-        public void Login()
+        public void Login(List<String> autoJoin)
         {
             Send("NICK " + nickname);
             Send("USER " + nickname + " " + netname + " " + netname + " :" + realname);
+            Thread.Sleep(5000);  // Give some time for the server to register us.
+            foreach (string chan in autoJoin)
+                Join(chan);
         }
 
         /// <summary>
@@ -161,8 +136,45 @@ namespace ThreadedIRCBot
                 Output.Write("CONNECTION", ConsoleColor.Red, "Failed to connect to remote server");
 
             tcpClient.LingerState = new LingerOption(false, 0);
-            Login();
-            connecting = false;
+            Login((List<String>)result.AsyncState);
+
+            while (tcpClient.Connected)         // While we still have a connection
+            {
+                if (tcpClient.Available > 0)    // Check to see if there's any data to read
+                {
+                    // Create a new callback for the read data
+                    AsyncCallback readCallback = new AsyncCallback(ASyncReadCallback);
+
+                    // Create a buffer for the data
+
+                    byte[] buffer = new byte[tcpClient.Available];
+
+                    try
+                    {
+                        // Read the data into the buffer, and pass it to the callback method to deal with asychronously 
+                        networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, buffer);
+                    }
+                    catch (Exception e)
+                    {
+                        // Something has gone wrong. Bail?
+                        return;
+                    }
+                }
+#if __MonoCS__
+                    // Sleeps the thread for 50ms (blocking read does not work under mono)
+                    Thread.Sleep(50);
+#else
+                try
+                {
+                    // Read 0 bytes from the buffer, and allow this to block
+                    networkStream.Read(new byte[1], 0, 0);
+                }
+                catch { return; }
+#endif
+            }
+
+            Output.Write("CONNECTION", ConsoleColor.Red, "Disconnected.");
+            Console.ReadLine();
         }
 
         private void ASyncReadCallback(IAsyncResult result)

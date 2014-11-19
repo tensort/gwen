@@ -164,7 +164,7 @@ namespace ThreadedIRCBot
         /// <param name="e"></param>
         void irc_IdentNoAuthEvent(object sender, Events.IdentAuthNoResponseEventArgs e)
         {
-            irc.Login();
+            irc.Login(new List<String>());
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.IO;
 
 using Newtonsoft.Json;
@@ -44,8 +45,12 @@ namespace ThreadedIRCBot
 
                 b.AddListener(new URL(b.GetIRC()));
 
-                b.GetIRC().Connect();
+                b.GetIRC().Connect(s.AutoJoin);
             }
+
+            // TODO: Horrible hack.
+            while (true)
+                Thread.Sleep(200);
         }
     }
 

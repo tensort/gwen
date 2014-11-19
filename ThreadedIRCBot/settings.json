@@ -1,10 +1,18 @@
 ﻿[
 	{
-		"IRCNane" : "Gwyn",
+		"IRCName" : "Gwyn",
 		"IRCHost" : "irc.freenode.org",
-		"IRCNick" : "Gwyn",
+		"IRCNick" : "GwynDev",
 		"IRCUser" : "Gwyn the C#.NET IRC Bot",
 		"IRCPort" : 6667,
-		"AutoJoin" : ["#cs"]
+		"AutoJoin" : ["#KentCS"]
+	},
+	{
+		"IRCName" : "Gwyn",
+		"IRCHost" : "irc.privmsg.me.uk",
+		"IRCNick" : "GwynDev",
+		"IRCUser" : "Gwyn the C#.NET IRC Bot",
+		"IRCPort" : 6667,
+		"AutoJoin" : ["#lobby"]
 	}
 ]
