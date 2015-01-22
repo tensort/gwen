@@ -40,11 +40,13 @@ namespace ThreadedIRCBot
         {
             List<String> retVal = new List<string>();
             Regex re = new Regex(URL_REGEX);
-
+            // We should keep track of how many URLs have been added, so we can limit for flood prevention.
+            int match_count = 0;
+            
             foreach(string s in words)
             {
                 Match m = re.Match(s);
-                if (m.Success)
+                if (m.Success && match_count <= 5)
                     retVal.Add(s);
             }
 
