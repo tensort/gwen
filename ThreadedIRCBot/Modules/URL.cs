@@ -46,7 +46,7 @@ namespace ThreadedIRCBot
             foreach(string s in words)
             {
                 Match m = re.Match(s);
-                if (m.Success && match_count <= 5)
+                if (m.Success && ++match_count <= 5)
                     retVal.Add(s);
             }
 
