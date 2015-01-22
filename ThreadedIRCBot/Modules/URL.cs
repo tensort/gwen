@@ -58,6 +58,8 @@ namespace ThreadedIRCBot
             Int64 bytes_total;
 
             WebRequest wr = HttpWebRequest.Create(url);
+            // Set the 'Timeout' property in Milliseconds.
+            wr.Timeout = 5000; // 5s timeout
             wr.Method = "HEAD";
             using (WebResponse wresp = wr.GetResponse())
             {
