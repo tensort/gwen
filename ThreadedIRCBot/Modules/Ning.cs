@@ -26,7 +26,12 @@ namespace ThreadedIRCBot
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
-            if(DateTime.Now.Hour < 4 || DateTime.Now.Hour > 12)
+            if(DateTime.Now.Hour => 12 && DateTime.Now.Hour <= 17)
+            {
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Afternooning."));
+                return;
+            }
+            if(DateTime.Now.Hour > 17)
                 irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Evening."));
             else
                 irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Morning."));
