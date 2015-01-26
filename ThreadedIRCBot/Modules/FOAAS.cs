@@ -105,6 +105,7 @@ namespace ThreadedIRCBot
         {
             WebRequest wr = HttpWebRequest.Create(FOOAS_BASE_URL + url);
             wr.Method = "GET";
+            wr.Headers.Add("Accept", "text/plain");
             using (WebResponse resp = wr.GetResponse())
             {
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream()))
