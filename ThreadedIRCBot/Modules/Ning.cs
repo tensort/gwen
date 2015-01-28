@@ -26,15 +26,23 @@ namespace ThreadedIRCBot
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
-            if(DateTime.Now.Hour => 12 && DateTime.Now.Hour <= 17)
+	    string msg = "";
+	    if (command.Length > 2)
             {
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Afternooning."));
+                for (int i = 2; i < command.Length; i++)
+                    msg += command[i].Replace("\r\n", " ") + " ";
+            }
+	    msg = msg.Trim();
+
+            if(DateTime.Now.Hour >= 12 && DateTime.Now.Hour <= 17)
+            {
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Afternooning " + msg + "."));
                 return;
             }
             if(DateTime.Now.Hour > 17)
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Evening."));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Evening " + msg + "."));
             else
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Morning."));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Morning " + msg + "."));
         }
 
         public override string Help()
