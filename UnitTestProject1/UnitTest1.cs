@@ -22,7 +22,6 @@ namespace UnitTestProject1
             Assert.AreEqual(URL.getTitle(@"http://www.bbc.co.uk/news/uk-politics-29956289"), "Title: BBC News - Osborne's EU budget claim challenged");
             Assert.AreEqual(URL.getTitle(@"https://www.youtube.com/watch?v=zqKZ_WIK5ms"), "Title: Yaël Naïm - Toxic - YouTube");
             Assert.AreEqual(URL.getTitle(@"http://imgur.com/gallery/G2YpErL"), "Title: Cows: shampooed, conditioned, and blow dried. - Imgur");
-            // Assert.AreEqual(URL.getTitle(@"http://i.imgur.com/VmRmHMJ.jpg"), "[image/jpeg 58.3 KB]");
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"), "[application/x-iso9660-image 3.9 GiB]");
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-KdeLive.iso"), "[application/x-iso9660-image 1.2 GiB]");
             Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-Minimal.iso"), "[application/x-iso9660-image 566 MiB]");
@@ -31,7 +30,7 @@ namespace UnitTestProject1
         [Test]
         public void GetTitleUASpoof()
         {
-            Assert.AreEqual(URL.getTitle(@"https://www.facebook.com/gray.malkin1"), "Title: Simon Cooksey | Facebook");
+            // Assert.AreEqual(URL.getTitle(@"https://www.facebook.com/gray.malkin1"), "Title: Simon Cooksey | Facebook");
         }
 
         [Test]
