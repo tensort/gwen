@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using HtmlAgilityPack;
+using iTextSharp.text.pdf;
 using System.Net;
 
 namespace ThreadedIRCBot
@@ -27,7 +28,7 @@ namespace ThreadedIRCBot
             foreach(string url in getURLs(command))
             {
                 string urlt = url.TrimStart(":".ToCharArray());
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Title: " + getTitle(urlt)));
+                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, getTitle(urlt)));
             }
         }
 
@@ -69,7 +70,22 @@ namespace ThreadedIRCBot
                 {
                     return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
                 }
-            }
+          
+
+		if(wresp.Headers["Content-Type"] == "application/pdf")
+	    	{
+		    PdfReader reader = new PdfReader(url);
+		    try
+		    {
+			var title = reader.Info["Title"];
+		        return "Title: " + title + " [" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+		    }
+		    catch
+		    {
+			return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+		    }
+		}
+	    }
 
             HtmlDocument doc = new HtmlDocument();
             WebClient wc = new WebClient();
@@ -77,9 +93,11 @@ namespace ThreadedIRCBot
             wc.Headers["User-Agent"] = "Mozilla/5.0 (MSIE 9.0; Windows NT 6.1; Trident/5.0)";
             doc.Load(wc.OpenRead(url), Encoding.UTF8);
             string retVal = "";
+
+
             if (doc.DocumentNode.SelectSingleNode("//head/title") != null)
             {
-                retVal = doc.DocumentNode.SelectSingleNode("//head/title").InnerText.Trim();
+                retVal = "Title: " + doc.DocumentNode.SelectSingleNode("//head/title").InnerText.Trim();
             }
             else
             {
