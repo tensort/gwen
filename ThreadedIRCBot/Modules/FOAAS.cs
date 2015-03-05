@@ -103,9 +103,9 @@ namespace ThreadedIRCBot
 
         public static string GetResponse(string url)
         {
-            WebRequest wr = HttpWebRequest.Create(FOOAS_BASE_URL + url);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(FOOAS_BASE_URL + url);
             wr.Method = "GET";
-            wr.Headers.Add("Accept", "text/plain");
+            wr.Accept = "text/plain";
             using (WebResponse resp = wr.GetResponse())
             {
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream()))
