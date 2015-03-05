@@ -1,0 +1,4 @@
+language: csharp
+solution: ThreadedIRCBot.sln
+after_success:
+  - mono ./UnitTestProject1/NUnit-2.6.4/bin/nunit-console.exe UnitTestProject1/bin/Release/UnitTestProject1.dll
