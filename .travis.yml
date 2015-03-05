@@ -1,5 +1,7 @@
 language: csharp
+install:
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - xbuild
 after_success:
-  - mono ./UnitTestProject1/NUnit-2.6.4/bin/nunit-console.exe UnitTestProject1/bin/Release/UnitTestProject1.dll
+  - mono ./testrunner/NUnit.Runners.2.6.4/nunit-console.exe UnitTestProject1/bin/Release/UnitTestProject1.dll
