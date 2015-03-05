@@ -1,40 +1,40 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ThreadedIRCBot;
 using System.Collections.Generic;
 
 namespace UnitTestProject1
 {
-    [TestClass]
+    using NUnit.Framework;
+
+    [TestFixture]
     public class URLTests
     {
-        [TestMethod]
-        [TestCategory("Helper")]
+        [Test]
         public void BytesToSize()
         {
-            Assert.AreEqual(URL.size_to_string((long)(1024 * 1024 * 1024 * 1.2)), "1.2 GB");
+            Assert.AreEqual(URL.size_to_string((long)(1024 * 1024 * 1024 * 1.2)), "1.2 GiB");
         }
 
-        [TestMethod]
+        [Test]
         public void GetTitle()
         {
-            Assert.AreEqual(URL.getTitle(@"http://www.google.com/"), "Google");
-            Assert.AreEqual(URL.getTitle(@"http://www.bbc.co.uk/news/uk-politics-29956289"), "BBC News - Osborne's EU budget claim challenged");
-            Assert.AreEqual(URL.getTitle(@"https://www.youtube.com/watch?v=zqKZ_WIK5ms"), "Yaël Naïm - Toxic - YouTube");
-            Assert.AreEqual(URL.getTitle(@"http://imgur.com/gallery/G2YpErL"), "Cows: shampooed, conditioned, and blow dried. - Imgur");
+            Assert.AreEqual(URL.getTitle(@"http://www.google.com/"), "Title: Google");
+            Assert.AreEqual(URL.getTitle(@"http://www.bbc.co.uk/news/uk-politics-29956289"), "Title: BBC News - Osborne's EU budget claim challenged");
+            Assert.AreEqual(URL.getTitle(@"https://www.youtube.com/watch?v=zqKZ_WIK5ms"), "Title: Yaël Naïm - Toxic - YouTube");
+            Assert.AreEqual(URL.getTitle(@"http://imgur.com/gallery/G2YpErL"), "Title: Cows: shampooed, conditioned, and blow dried. - Imgur");
             // Assert.AreEqual(URL.getTitle(@"http://i.imgur.com/VmRmHMJ.jpg"), "[image/jpeg 58.3 KB]");
-            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"), "[application/x-iso9660-image 3.9 GB]");
-            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-KdeLive.iso"), "[application/x-iso9660-image 1.2 GB]");
-            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-Minimal.iso"), "[application/x-iso9660-image 566 MB]");
+            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-DVD.iso"), "[application/x-iso9660-image 3.9 GiB]");
+            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-KdeLive.iso"), "[application/x-iso9660-image 1.2 GiB]");
+            Assert.AreEqual(URL.getTitle(@"http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7.0-1406-x86_64-Minimal.iso"), "[application/x-iso9660-image 566 MiB]");
         }
 
-        [TestMethod]
+        [Test]
         public void GetTitleUASpoof()
         {
-            Assert.AreEqual(URL.getTitle(@"https://www.facebook.com/gray.malkin1"), "Simon Moore | Facebook");
+            Assert.AreEqual(URL.getTitle(@"https://www.facebook.com/gray.malkin1"), "Title: Simon Cooksey | Facebook");
         }
 
-        [TestMethod]
+        [Test]
         public void GetURL()
         {
             string[] k = {"http://www.flickr.com/photos/phaseviii/9217207106/in/set-72157626056708495"};
@@ -44,10 +44,10 @@ namespace UnitTestProject1
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class FOAASTests
     {
-        [TestMethod]
+        [Test]
         public void GetResponse()
         {
             Assert.AreEqual(FOAAS.GetResponse("nugget/graymalkin/bunu"), "Well graymalkin, aren't you a shining example of a rancid fuck-nugget. - bunu");
