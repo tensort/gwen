@@ -43,7 +43,7 @@ namespace ThreadedIRCBot
                 b.AddModule(d, "$p");
                 b.AddModule(d, "$wotd");
 
-                b.AddListener(new URL(b.GetIRC()));
+                b.AddListener(new URL(b.GetIRC(), !s.IRCHost.Contains("freenode")));
 
                 b.GetIRC().Connect(s.AutoJoin);
             }

@@ -14,21 +14,27 @@ namespace ThreadedIRCBot
     {
         public static string URL_REGEX = @"(?<Protocol>\w+):\/\/(?<Domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*";
         public static Int64 MAX_DOWNLOAD_SIZE = 1024 * 1024 * 64; // Max download 64 mb
+	private readonly bool get_title;
+
         public override void Start() { }
 
         public override void Stop() { }
 
         public override void Save() { }
 
-        public URL(IRC ircNet) : base(ircNet)
-        { }
+        public URL(IRC ircNet, bool htmlTitleEnabled) : base(ircNet)
+        { 
+	    get_title = htmlTitleEnabled;
+	}
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
             foreach(string url in getURLs(command))
             {
                 string urlt = url.TrimStart(":".ToCharArray());
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, getTitle(urlt)));
+		string title = getTitle(urlt, get_title);
+		if(title != "")
+		    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, title));
             }
         }
 
@@ -54,7 +60,7 @@ namespace ThreadedIRCBot
             return retVal;
         }
 
-        public static string getTitle(string url)
+        public static string getTitle(string url, bool doHTMLTitle)
         {
             Int64 bytes_total;
 
@@ -96,7 +102,10 @@ namespace ThreadedIRCBot
 
 
             if (doc.DocumentNode.SelectSingleNode("//head/title") != null)
-            {
+            {	    
+	        if(!doHTMLTitle)
+	     	    return "";
+
                 retVal = "Title: " + doc.DocumentNode.SelectSingleNode("//head/title").InnerText.Trim();
             }
             else

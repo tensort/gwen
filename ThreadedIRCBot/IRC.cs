@@ -15,7 +15,7 @@ namespace ThreadedIRCBot
         public delegate void IdentNoAuthEventHandler(object sender, Events.IdentAuthNoResponseEventArgs e);
         public event IdentNoAuthEventHandler IdentNoAuthEvent;
 
-        private string chatnet, nickname, realname, netname;
+        protected string chatnet, nickname, realname, netname;
         private int port;
         bool connecting;
 
