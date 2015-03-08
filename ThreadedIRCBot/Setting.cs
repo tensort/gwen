@@ -13,5 +13,6 @@ namespace ThreadedIRCBot
         public string IRCUser { get; set; }
         public int IRCPort { get; set; }
         public List<string> AutoJoin { get; set; }
+        public List<string> Admins { get; set; }
     }
 }

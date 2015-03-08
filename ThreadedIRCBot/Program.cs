@@ -30,7 +30,7 @@ namespace ThreadedIRCBot
 
             foreach (Setting s in netSetting)
             {
-                Bot b = new Bot(s.IRCHost, s.IRCName, s.IRCNick, s.IRCUser, s.IRCPort);
+                Bot b = new Bot(s.IRCHost, s.IRCName, s.IRCNick, s.IRCUser, s.IRCPort, s.Admins);
                 b.AddModule(new WorldTime(b.GetIRC()), "$time");
                 b.AddModule(new Weather(b.GetIRC()), "$weather");
                 b.AddModule(new MessageBoard(b.GetIRC()), "$mboard");

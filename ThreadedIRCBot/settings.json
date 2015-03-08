@@ -5,7 +5,8 @@
 		"IRCNick" : "GwynDev",
 		"IRCUser" : "Gwyn the C#.NET IRC Bot",
 		"IRCPort" : 6667,
-		"AutoJoin" : ["#KentCS"]
+		"AutoJoin" : ["#KentCS"],
+		"Admins" : ["graymalkin", "Pengwin"]
 	},
 	{
 		"IRCName" : "Gwyn",
@@ -13,6 +14,7 @@
 		"IRCNick" : "GwynDev",
 		"IRCUser" : "Gwyn the C#.NET IRC Bot",
 		"IRCPort" : 6667,
-		"AutoJoin" : ["#lobby"]
+		"AutoJoin" : ["#lobby"],
+		"Admins" : ["graymalkin", "xand"]
 	}
 ]

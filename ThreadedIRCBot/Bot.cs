@@ -12,17 +12,15 @@ namespace ThreadedIRCBot
         List<string> adminList;
         Hashtable modules = new Hashtable();
         List<Module> listeners = new List<Module>();
-        private const string mainAdmin = "graymalkin";
 
-        public Bot(string ircNet, string ircName, string ircNick, string realName, int port)
+        public Bot(string ircNet, string ircName, string ircNick, string realName, int port, List<string> admins)
         {
             irc = new IRC(ircNet, ircName, ircNick, realName, port);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 
 
-            adminList = new List<string>();
-            adminList.Add(mainAdmin);
+            adminList = new List<string>(admins);
         }
 
         public IRC GetIRC() { return irc; }
@@ -101,30 +99,28 @@ namespace ThreadedIRCBot
             if (e.Message.MessageText.StartsWith(" :$add_admin"))
             {
                 Output.Write("ADMIN", ConsoleColor.Red, e.Message.MessageFrom + " attempted " + e.Message.MessageText.Substring(2));
-                if (e.Message.MessageFrom != mainAdmin)
+                if (!IsAdmin(e.Message.MessageFrom))
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
                 {
                     adminList.Add(cmd[i].Trim());
                     Output.Write("ADMIN", ConsoleColor.Red, cmd[i].Trim() + " added to admins");
-
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Ok."));
                 }
             }
 
             if (e.Message.MessageText.StartsWith(" :$remove_admin"))
             {
                 Output.Write("ADMIN", ConsoleColor.Red, e.Message.MessageFrom + " attempted " + e.Message.MessageText.Substring(2));
-                if (!adminList.Contains(e.Message.MessageFrom))
+                if (!IsAdmin(e.Message.MessageFrom))
                     return;
 
                 for (int i = 2; i < cmd.Length; i++)
                 {
-                    if (cmd[i].Trim() != "graymalkin")
-                    {
-                        adminList.Remove(cmd[i].Trim());
-                        Output.Write("ADMIN", ConsoleColor.Red, cmd[i].Trim() + " removed from admins");
-                    }
+                    adminList.Remove(cmd[i].Trim());
+                    Output.Write("ADMIN", ConsoleColor.Red, cmd[i].Trim() + " removed from admins");
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "Ok."));
                 }
             }
 
@@ -174,6 +170,11 @@ namespace ThreadedIRCBot
             {
                 irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, ((Module)modules[m]).Help()));
             }
+        }
+
+        public bool IsAdmin(string Nick)
+        {
+            return adminList.Contains(Nick);
         }
     }
 }
