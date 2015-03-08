@@ -14,7 +14,7 @@ namespace ThreadedIRCBot
     {
         public static string URL_REGEX = @"(?<Protocol>\w+):\/\/(?<Domain>[\w@][\w.:@]+)\/?[\w\.?=%&=\-@/$,]*";
         public static Int64 MAX_DOWNLOAD_SIZE = 1024 * 1024 * 64; // Max download 64 mb
-	private readonly bool get_title;
+	    private readonly bool get_title;
 
         public override void Start() { }
 
@@ -24,17 +24,17 @@ namespace ThreadedIRCBot
 
         public URL(IRC ircNet, bool htmlTitleEnabled) : base(ircNet)
         { 
-	    get_title = htmlTitleEnabled;
-	}
+	        get_title = htmlTitleEnabled;
+	    }
 
         public override void InterpretCommand(string[] command, Events.MessageReceivedEventArgs e)
         {
-            foreach(string url in getURLs(command))
+            foreach(string url in GetURLs(command))
             {
                 string urlt = url.TrimStart(":".ToCharArray());
-		string title = getTitle(urlt, get_title);
-		if(title != "")
-		    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, title));
+                string title = GetTitle(urlt, get_title);
+                if(title != "")
+                    irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, title));
             }
         }
 
@@ -43,7 +43,7 @@ namespace ThreadedIRCBot
             return "This module listens for URLs in chat, and outputs titles or MIME types.";
         }
 
-        public static List<String> getURLs(string[] words)
+        public static List<String> GetURLs(string[] words)
         {
             List<String> retVal = new List<string>();
             Regex re = new Regex(URL_REGEX);
@@ -60,21 +60,22 @@ namespace ThreadedIRCBot
             return retVal;
         }
 
-        public static string getTitle(string url, bool doHTMLTitle)
+        public static string GetTitle(string url, bool doHTMLTitle)
         {
             Int64 bytes_total;
 
             WebRequest wr = HttpWebRequest.Create(url);
             // Set the 'Timeout' property in Milliseconds.
             wr.Timeout = 5000; // 5s timeout
-            wr.Method = "HEAD";
+            wr.Method = "GET";
+
             using (WebResponse wresp = wr.GetResponse())
             {
                 bytes_total = Convert.ToInt64(wresp.Headers["Content-Length"]);
-                string size_string = size_to_string(bytes_total);
+                string size_string = SizeToString(bytes_total);
                 if (bytes_total > MAX_DOWNLOAD_SIZE)
                 {
-                    return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+                    return "[" + wresp.Headers["Content-Type"] + " " + SizeToString(bytes_total) + "]";
                 }
 
 	            if(wresp.Headers["Content-Type"] == "application/pdf")
@@ -83,11 +84,11 @@ namespace ThreadedIRCBot
 		            try
 		            {
 		            var title = reader.Info["Title"];
-		                return "Title: " + title + " [" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+		                return "Title: " + title + " [" + wresp.Headers["Content-Type"] + " " + SizeToString(bytes_total) + "]";
 		            }
 		            catch
 		            {
-			            return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+			            return "[" + wresp.Headers["Content-Type"] + " " + SizeToString(bytes_total) + "]";
 		            }
 	            }
 	        }
@@ -109,12 +110,12 @@ namespace ThreadedIRCBot
             }
             else
             {
-                return "[" + wc.ResponseHeaders["content-type"] + " " + size_to_string(bytes_total) + "]";
+                return "[" + wc.ResponseHeaders["content-type"] + " " + SizeToString(bytes_total) + "]";
             }
             return HtmlEntity.DeEntitize(retVal);
         }
 
-        public static string size_to_string(Int64 byteCount)
+        public static string SizeToString(Int64 byteCount)
         {
             string[] suf = { " B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB" }; //Longs run out around EB
             if (byteCount == 0)
