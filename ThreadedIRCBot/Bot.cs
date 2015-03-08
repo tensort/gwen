@@ -25,6 +25,8 @@ namespace ThreadedIRCBot
             adminList.Add(mainAdmin);
         }
 
+        public IRC GetIRC() { return irc; }
+
         public void AddModule(Module m, string command)
         {
             if (modules[":" + command] != null)
@@ -126,9 +128,6 @@ namespace ThreadedIRCBot
                 }
             }
 
-            if (e.Message.MessageText.StartsWith(" :$compliment_zebr"))
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, getCompliment()));
-
             if (e.Message.MessageText.StartsWith(" :$help") && e.Message.MessageText.Split(' ').Length <= 2)
                 irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, @"Help can be found at http://graymalk.in/ircbot/"));
 
@@ -137,24 +136,6 @@ namespace ThreadedIRCBot
 
             if (e.Message.MessageText.StartsWith(" :$modules"))
                 PrintModules(e);
-
-            if (e.Message.MessageFrom == "zebr" && (e.Message.MessageText.Contains("Gwen: ") || e.Message.MessageText.Contains("Gwen ")))
-                irc.Send(new IRCMessage("PRIVMSG", e.Message.MessageTarget, "zebr: <3"));
-
-
-        }
-        public IRC GetIRC() { return irc; }
-
-        public string getCompliment()
-        {
-            string[] compliments = { "You're looking lovely today, zebr", "zebr: You're cute :$", "Hey zebr, you're the best!",
-                                     "I'd love to spend some more time with zebr", "I have a bit of a crush on zebr, he's so cool",
-                                     "zebr: you're funny :$", "zebr, you don't get drunk - you get superhuman!", 
-                                     "zebr has the best jokes", "This one time, I was at a bar, and I said 'this would be better if zebr were here'",
-                                     "I wish some people were more like zebr", "zebr would make the best Dad!",
-                                     "You know who's cool? zebr is cool!", "<3 you, zebr", "Some people are boring, zebr isn't one of them."};
-            int number = new Random().Next(compliments.Length);
-            return compliments[number];
         }
 
         /// <summary>
