@@ -76,22 +76,21 @@ namespace ThreadedIRCBot
                 {
                     return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
                 }
-          
 
-		if(wresp.Headers["Content-Type"] == "application/pdf")
-	    	{
-		    PdfReader reader = new PdfReader(url);
-		    try
-		    {
-			var title = reader.Info["Title"];
-		        return "Title: " + title + " [" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
-		    }
-		    catch
-		    {
-			return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
-		    }
-		}
-	    }
+	            if(wresp.Headers["Content-Type"] == "application/pdf")
+	            {
+		            PdfReader reader = new PdfReader(url);
+		            try
+		            {
+		            var title = reader.Info["Title"];
+		                return "Title: " + title + " [" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+		            }
+		            catch
+		            {
+			            return "[" + wresp.Headers["Content-Type"] + " " + size_to_string(bytes_total) + "]";
+		            }
+	            }
+	        }
 
             HtmlDocument doc = new HtmlDocument();
             WebClient wc = new WebClient();
