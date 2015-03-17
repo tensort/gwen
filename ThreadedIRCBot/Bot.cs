@@ -10,17 +10,19 @@ namespace ThreadedIRCBot
     {
         private IRC irc;
         List<string> adminList;
+	List<string> ignoreList;
+
         Hashtable modules = new Hashtable();
         List<Module> listeners = new List<Module>();
 
-        public Bot(string ircNet, string ircName, string ircNick, string realName, int port, List<string> admins)
+        public Bot(string ircNet, string ircName, string ircNick, string realName, int port, List<string> admins, List<string> ignores)
         {
             irc = new IRC(ircNet, ircName, ircNick, realName, port);
             irc.IdentNoAuthEvent += new IRC.IdentNoAuthEventHandler(irc_IdentNoAuthEvent);  // Work around
             irc.MessageEvent += new IRC.MessageEventHandler(irc_MessageEvent);              // Kinda essential.
 
-
             adminList = new List<string>(admins);
+	    ignoreList = new List<string>(ignores);
         }
 
         public IRC GetIRC() { return irc; }
@@ -142,6 +144,8 @@ namespace ThreadedIRCBot
         void irc_IdentNoAuthEvent(object sender, Events.IdentAuthNoResponseEventArgs e)
         {
             irc.Login(new List<String>());
+	    foreach(string ignore in ignoreList)
+	    	    irc.Send(new IRCMessage("IGNORE", ignore));
         }
 
         /// <summary>

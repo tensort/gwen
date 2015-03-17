@@ -1,20 +1,32 @@
 ﻿[
 	{
 		"IRCName" : "Gwyn",
-		"IRCHost" : "irc.freenode.org",
-		"IRCNick" : "GwynDev",
+		"IRCHost" : "irc.freenode.net",
+		"IRCNick" : "Gwyn",
 		"IRCUser" : "Gwyn the C#.NET IRC Bot",
 		"IRCPort" : 6667,
 		"AutoJoin" : ["#KentCS"],
-		"Admins" : ["graymalkin", "Pengwin"]
+		"Admins" : ["graymalkin", "Pengwin"],
+	        "Ignore" : ["CirnoX", "Marvin64", "Marvin32", "cheese_cake"]
 	},
 	{
 		"IRCName" : "Gwyn",
 		"IRCHost" : "irc.privmsg.me.uk",
-		"IRCNick" : "GwynDev",
+		"IRCNick" : "Gwyn",
 		"IRCUser" : "Gwyn the C#.NET IRC Bot",
 		"IRCPort" : 6667,
 		"AutoJoin" : ["#lobby"],
-		"Admins" : ["graymalkin", "xand"]
+		"Admins" : ["graymalkin", "makoto"],
+	        "Ignore" : ["Botten_Anna"]
+	},
+	{
+		"IRCName" : "Gwyn",
+		"IRCHost" : "irc.cs.kent.ac.uk",
+		"IRCNick" : "Gwyn",
+		"IRCUser" : "Gwyn the C#.NET IRC Bot",
+		"IRCPort" : 6667,
+		"AutoJoin" : ["#cs", "#furs", "#circlejerk", "#erlang"],
+		"Admins" : ["graymalkin", "xand"],
+	        "Ignore" : ["CirnoX", "Marvin64", "Marvin32", "Marvin", "cake"]
 	}
 ]
