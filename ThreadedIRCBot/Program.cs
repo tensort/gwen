@@ -38,10 +38,17 @@ namespace ThreadedIRCBot
                 b.AddModule(new Ning(b.GetIRC()), "$ning");
                 b.AddModule(new FOAAS(b.GetIRC()), "$foaas");
                 b.AddModule(new Timer(b.GetIRC(), b), "$timer");
+
                 Define d = new Define(b.GetIRC());
                 b.AddModule(d, "$d");
                 b.AddModule(d, "$p");
                 b.AddModule(d, "$wotd");
+
+		BotSnack bs = new BotSnack(b.GetIRC());
+                b.AddModule(bs, "$botsnack");
+		b.AddModule(bs, "!botsnack");
+		b.AddModule(bs, "#botsnack");
+		b.AddModule(bs, "botsnack");
 
                 b.AddListener(new URL(b.GetIRC(), !s.IRCHost.Contains("freenode")));
 
