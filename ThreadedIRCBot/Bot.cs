@@ -143,9 +143,7 @@ namespace ThreadedIRCBot
         /// <param name="e"></param>
         void irc_IdentNoAuthEvent(object sender, Events.IdentAuthNoResponseEventArgs e)
         {
-            irc.Login(new List<String>());
-	    foreach(string ignore in ignoreList)
-	    	    irc.Send(new IRCMessage("IGNORE", ignore));
+            irc.Login(adminList);
         }
 
         /// <summary>

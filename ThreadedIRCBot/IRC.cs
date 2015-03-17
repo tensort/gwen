@@ -42,19 +42,20 @@ namespace ThreadedIRCBot
         /// <summary>
         /// Opens the connection to the IRC Network
         /// </summary>
-        public async void Connect(List<String> autoJoin)
+        public async void Connect(List<string> autoJoin, List<string> ignoreList)
         {
             Output.Write("CONNECTION", ConsoleColor.Red, "Attempting to connect...");
 
             tcpClient = new TcpClient();
             AsyncCallback connectCallback = new AsyncCallback(ASyncConnectCallback);
-            tcpClient.BeginConnect(chatnet, port, ASyncConnectCallback, autoJoin);
+	    Object[] state = new Object[]{autoJoin, ignoreList};
+            tcpClient.BeginConnect(chatnet, port, ASyncConnectCallback, state);
         }
 
         /// <summary>
         /// Logs into the IRC network
         /// </summary>
-        public void Login(List<String> autoJoin)
+        public void Login(List<string> autoJoin)
         {
             Send("NICK " + nickname);
             Send("USER " + nickname + " " + netname + " " + netname + " :" + realname);
@@ -136,7 +137,11 @@ namespace ThreadedIRCBot
                 Output.Write("CONNECTION", ConsoleColor.Red, "Failed to connect to remote server");
 
             tcpClient.LingerState = new LingerOption(false, 0);
-            Login((List<String>)result.AsyncState);
+	    
+	    List<string> autoJoin = (List<string>)((Object[])result.AsyncState)[0];
+	    List<string> ignoreList = (List<string>)((Object[])result.AsyncState)[1];
+	    
+            Login(autoJoin);
 
             while (tcpClient.Connected)         // While we still have a connection
             {
@@ -152,7 +157,8 @@ namespace ThreadedIRCBot
                     try
                     {
                         // Read the data into the buffer, and pass it to the callback method to deal with asychronously 
-                        networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, buffer);
+			Object[] state = new Object[]{buffer, ignoreList};
+                        networkStream.BeginRead(buffer, 0, tcpClient.Available, readCallback, state);
                     }
                     catch (Exception e)
                     {
@@ -179,7 +185,9 @@ namespace ThreadedIRCBot
 
         private void ASyncReadCallback(IAsyncResult result)
         {
-            byte[] data = (byte[])result.AsyncState;
+            byte[] data = (byte[])((Object[])result.AsyncState)[0];
+	    List<string> ignoreList = (List<string>)((Object[])result.AsyncState)[1];
+
             string utf8Encoded = System.Text.Encoding.UTF8.GetString(data);
             // Split the string into it's lines
             string[] lines = utf8Encoded.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -188,12 +196,12 @@ namespace ThreadedIRCBot
             {
                 string sanitisedLn = ln.Replace("\r\n", "");
                 Output.Write("RECEIVED", ConsoleColor.Green, sanitisedLn);
-                CreateMessageEvent(sanitisedLn);
+                CreateMessageEvent(sanitisedLn, ignoreList);
             }
         }
         #endregion
 
-        private void CreateMessageEvent(string text)
+        private void CreateMessageEvent(string text, List<string> ignoreList)
         {            
             try
             {
@@ -219,7 +227,8 @@ namespace ThreadedIRCBot
                         {
                             msg = msg + " " + text.Split(' ')[i];
                         }
-                        MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
+			if(!ignoreList.Contains(from))
+                            MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
                     }
                 }
             }

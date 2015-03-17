@@ -52,7 +52,7 @@ namespace ThreadedIRCBot
 
                 b.AddListener(new URL(b.GetIRC(), !s.IRCHost.Contains("freenode")));
 
-                b.GetIRC().Connect(s.AutoJoin);
+                b.GetIRC().Connect(s.AutoJoin, s.Ignore);
             }
 
             // TODO: Horrible hack.
