@@ -31,7 +31,7 @@ namespace ThreadedIRCBot
 
         public override string Help()
         {
-            return "Eats a tastey snack!";
+            return "Eats a tasty snack!";
         }
     }
 }
