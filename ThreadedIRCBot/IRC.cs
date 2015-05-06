@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
@@ -14,11 +14,11 @@ namespace ThreadedIRCBot
         public event MessageEventHandler MessageEvent;
         public delegate void IdentNoAuthEventHandler(object sender, Events.IdentAuthNoResponseEventArgs e);
         public event IdentNoAuthEventHandler IdentNoAuthEvent;
-
+        private bool ponged=false;
         protected string chatnet, nickname, realname, netname;
         private int port;
         bool connecting;
-
+        private List<string> autoJoinList;
         TcpClient tcpClient;
         NetworkStream networkStream;
         
@@ -45,6 +45,8 @@ namespace ThreadedIRCBot
         public async void Connect(List<string> autoJoin, List<string> ignoreList)
         {
             Output.Write("CONNECTION", ConsoleColor.Red, "Attempting to connect...");
+            //In order to put it to false on reconnect to server
+            this.ponged = false;
 
             tcpClient = new TcpClient();
             AsyncCallback connectCallback = new AsyncCallback(ASyncConnectCallback);
@@ -59,9 +61,9 @@ namespace ThreadedIRCBot
         {
             Send("NICK " + nickname);
             Send("USER " + nickname + " " + netname + " " + netname + " :" + realname);
-            Thread.Sleep(5000);  // Give some time for the server to register us.
-            foreach (string chan in autoJoin)
-                Join(chan);
+            //Affect autojoin so it can be joined after first PING
+            this.autoJoinList = autoJoin;
+
         }
 
         /// <summary>
@@ -213,22 +215,50 @@ namespace ThreadedIRCBot
                 }
 
                 if (text.StartsWith("PING"))
+                {
                     Send(text.Replace("PING :", "PONG "));
+                    // If !ponged => means it is the first PING, so we use autojoin
+                    if (!ponged)
+                    {
+                        foreach (string chan in this.autoJoinList)
+                            Join(chan);
+
+                    }
+                    //ponged becomes true so autojoin gets cancelled
+                   
+                    ponged = true;
+                }
                 else
                 {
                     if (text.Split(' ').Length > 3)
-                    {  
-                        string msg = "", target = "", command = "", from = "";
-                        command = text.Split(' ')[1];
-                        if (command == "PRIVMSG")
-                            from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
-                        target = text.Split(' ')[2];
-                        for (int i = 3; i < text.Split(' ').Length; i++)
+                    {
+
+                        switch (text.Split(' ')[1])
                         {
-                            msg = msg + " " + text.Split(' ')[i];
+                            case "PRIVMSG":
+                                
+                                string msg = "", target = "", command = "", from = "";
+                                  
+                                    from = text.Split(' ')[0].Split(':')[1].Split('!')[0];
+                                    
+                                    for (int i = 3; i < text.Split(' ').Length; i++)
+                                    {
+                                        msg = msg + " " + text.Split(' ')[i];
+                                    }
+                                    if (!ignoreList.Contains(from))
+                                    {
+                                        // update to make answers only in private to not spam channels
+                                        //TODO : check to add rules to answers on channels (maybe OPs ? Maybe whitelist )
+                                        MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, from, msg, from)));
+
+                                    }
+                                break;
+                            default :
+                                break;
+
+
                         }
-			if(!ignoreList.Contains(from))
-                            MessageEvent(this, new Events.MessageReceivedEventArgs(new IRCMessage(command, target, msg, from)));
+
                     }
                 }
             }
